@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot Interface - VISA Theme</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1f71;
+            color: #fff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            background-color: #14285b; /* Darker blue for the header */
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header img {
+            height: 50px; /* Adjust the size of the logo as needed */
+            filter: invert(100%); /* Invert color of the logo to white */
+        }
+
+        .chat-window {
+            background-color: #fff;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            color: #333;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background-color: #e9ecef;
+            text-align: left;
+            margin-left: auto;
+            max-width: 80%;
+        }
+
+        .bot-message {
+            background-color: #d1e7ff;
+            text-align: left;
+            max-width: 80%;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .input-area input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        .input-area button {
+            background-color: #1a1f71;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .input-area button:hover {
+            background-color: #14285b;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <img src="logo.png" alt="VISA Logo">
+    <div>Chatbot</div>
+</div>
+<div class="chat-window" id="chatWindow">
+    <!-- Chat messages go here -->
+    <div class="message bot-message">Welcome to the VISA Chatbot. How can I assist you today?</div>
+    <!-- More messages will be added here dynamically -->
+</div>
+<div class="input-area">
+    <input type="text" id="messageInput" placeholder="Type your message here..."/>
+    <button id="sendMessage">Send</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script>
+    function sendMessage() {
+        var input = document.getElementById('messageInput');
+        var button = document.getElementById('sendMessage');
+        var message = input.value.trim();
+        if (message) {
+            // add the user's message to the chat window
+            var userMessageDiv = document.createElement('div');
+            userMessageDiv.textContent = message;
+            userMessageDiv.className = 'message user-message';
+            document.getElementById('chatWindow').appendChild(userMessageDiv);
+            button.disabled = true;
+
+            // clear the input
+            input.value = '';
+
+            //  AJAX request to the Python Flask backend
+            fetch('/process_query', {
+                method: 'POST',
+                body: JSON.stringify({query: message}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // bot's reply to the chat window
+                    var botMessageDiv = document.createElement('div');
+                    botMessageDiv.textContent = data.answer;
+                    botMessageDiv.className = 'message bot-message';
+                    document.getElementById('chatWindow').appendChild(botMessageDiv);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    button.disabled = false;
+                });
+        }
+    }
+
+    // Event listener for click
+    document.getElementById('sendMessage').addEventListener('click', sendMessage);
+
+    // Event listener for the Enter key
+    document.getElementById('messageInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent default "Enter" behavior (submitting form)
+            sendMessage();
+        }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

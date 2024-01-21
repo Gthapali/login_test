@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VISA</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1f71;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+            color: #333;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .visa-logo {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 120px;
+            height: 60px;
+            background-image: url('logo2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .custom-btn {
+            background-color: #1a1f71;
+            color: #fff;
+            border: none;
+        }
+
+        .custom-btn:hover {
+            background-color: #14285b;
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: .25rem;
+            font-size: 80%;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="visa-logo"></div>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+            <div class="invalid-feedback">Username is required.</div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            <div class="invalid-feedback">Password is required.</div>
+        </div>
+        <div class="form-group">
+            <label for="usergroup">User Group</label>
+            <select class="form-control" id="usergroup" name="usergroup" required>
+                <option value="">Select a group</option>
+                <option value="group1">Group 1</option>
+                <option value="group2">Group 2</option>
+                <option value="group3">Group 3</option>
+                <!-- Add more groups as needed -->
+            </select>
+            <div class="invalid-feedback">Please select a user group.</div>
+        </div>
+        <button type="submit" class="btn custom-btn">Login</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var form = this;
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+        } else {
+            window.location.href = 'chat.html'; // Redirect to chat.html
+        }
+    });
+</script>
+</body>
+</html>
